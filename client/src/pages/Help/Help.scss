@@ -1,0 +1,82 @@
+.help {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+
+  .container {
+    max-width: 800px;
+    padding: 40px;
+    text-align: center;
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    p {
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .dispute-section {
+      margin-top: 40px;
+      padding: 30px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+      text-align: left;
+
+      h2 {
+        margin-bottom: 20px;
+        color: #333;
+        text-align: center;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+
+        label {
+          display: block;
+          margin-bottom: 8px;
+          font-weight: bold;
+          color: #555;
+        }
+
+        input[type="text"],
+        textarea {
+          width: 100%;
+          padding: 12px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          font-size: 16px;
+          box-sizing: border-box; /* Ensures padding doesn't increase total width */
+        }
+
+        textarea {
+          resize: vertical; /* Allow vertical resizing */
+        }
+      }
+
+      button[type="submit"] {
+        background-color: #1dbf73;
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: bold;
+        width: 100%;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: #1a9e66;
+        }
+
+        &:disabled {
+          background-color: #cccccc;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+}

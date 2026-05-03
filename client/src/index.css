@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --green-color: #1e4ed8;
+    --white-color: #ffffff;
+    --dark-green: #163071;
+    --gray-color: #5b6785;
+    --blue-50: #f4f8ff;
+    --blue-100: #e5eeff;
+    --blue-600: #2563eb;
+    --blue-700: #1d4ed8;
+    --blue-900: #0f1f4a;
+    --text-primary: #13264d;
+    --text-secondary: #4f5f84;
+    --surface: #ffffff;
+    --surface-muted: #f7faff;
+    --border-color: #dce6ff;
+    --shadow-soft: 0 10px 30px rgba(22, 48, 113, 0.12);
+}
+
+body {
+    font-family: "Montserrat", sans-serif;
+    background: linear-gradient(180deg, #f7faff 0%, #eef4ff 100%);
+    color: var(--text-primary);
+    line-height: 1.5;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
+    color: var(--blue-900);
+    letter-spacing: 0.2px;
+}
+
+p, span, input, textarea, button, label, a {
+    font-family: "Montserrat", sans-serif;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button {
+    border-radius: 10px;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+input, textarea, select {
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--text-primary);
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--blue-600);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+}

@@ -1,0 +1,59 @@
+.slide-Container {
+    padding: 20px 0;
+    width: 95%;
+    margin: auto;
+    position: relative;
+
+    /* Add styles to ensure horizontal layout within the slider */
+    .slick-list {
+      .slick-track {
+        display: flex !important;
+        flex-direction: row !important; /* Ensure horizontal direction */
+        // Remove any default margin that might cause stacking
+        margin: 0 !important;
+      }
+    }
+
+    .slick-slide {
+      float: none !important; /* Override float if react-slick uses it */
+      flex-shrink: 0;
+      flex-grow: 0;
+      box-sizing: border-box; /* Crucial for padding to be included in total width */
+      width: 310px !important; /* Explicitly set width to accommodate GigCard + margins */
+
+      > div {
+        width: 100%; /* Ensure the content wrapper takes full width */
+        display: flex; /* Use flexbox for centering */
+        justify-content: center; /* Center the GigCard within the slide */
+      }
+    }
+
+    .slick-dots {
+      bottom: -34px;
+    }
+
+    .slick-dots li button:before {
+      font-size: 10px;
+      color: #1dbf73;
+      opacity: 0.35;
+    }
+
+    .slick-dots li.slick-active button:before {
+      color: #1dbf73;
+      opacity: 1;
+    }
+
+    .prev,
+    .next {
+      top: 42%;
+      margin-top: 0;
+    }
+
+    .prev {
+      left: -14px;
+    }
+
+    .next {
+      right: -14px;
+    }
+}

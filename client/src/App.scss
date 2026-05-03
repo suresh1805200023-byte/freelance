@@ -1,0 +1,17 @@
+html,
+body,
+#root,
+.App {
+  width: 100% !important;
+  min-width: 320px !important;
+  overflow-x: hidden;
+}
+
+.App {
+  background: transparent;
+}
+
+.link {
+  text-decoration: none;
+  color: inherit;
+}

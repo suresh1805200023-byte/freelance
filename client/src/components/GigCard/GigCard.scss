@@ -1,0 +1,148 @@
+.link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.gigCard {
+  width: 280px;
+  height: 330px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  margin: 0 15px 20px;
+  transition: all 0.2s ease;
+  background: var(--surface);
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(20, 49, 113, 0.08);
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 30px rgba(20, 49, 113, 0.16);
+  }
+
+  img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+  }
+
+  .info {
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+
+    .user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      img {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+      }
+
+      span {
+        font-size: 13px;
+        color: var(--text-secondary);
+      }
+    }
+
+    p {
+      font-size: 14px;
+      color: var(--text-primary);
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    .star {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+
+      img {
+        width: 14px;
+        height: 14px;
+      }
+
+      span {
+        font-size: 13px;
+        font-weight: bold;
+        color: var(--blue-700);
+      }
+
+      .totalStars {
+        color: var(--text-secondary);
+        font-weight: normal;
+      }
+    }
+  }
+
+  hr {
+    height: 0;
+    border: 0.5px solid var(--border-color);
+    margin: 0;
+  }
+
+  .detail {
+    padding: 8px 20px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+
+    img {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      opacity: 0.5; // Makes the heart icon look more subtle
+    }
+
+    .price {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      line-height: 1.1;
+
+      span {
+        color: var(--text-secondary);
+        font-size: 9px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+
+      h2 {
+        color: var(--blue-900);
+        font-size: 15px; // Balanced size: small but clear
+        font-weight: 700;
+        margin: 0;
+        letter-spacing: -0.2px;
+      }
+    }
+  }
+}
+
+.gigTitleContainer {
+  text-align: left; // Changed to left for a standard marketplace feel
+  padding: 10px 20px 0px; // Aligned with .info padding
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.3;
+    color: var(--text-primary);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

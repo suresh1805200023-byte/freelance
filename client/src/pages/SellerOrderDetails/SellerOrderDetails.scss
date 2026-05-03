@@ -1,0 +1,236 @@
+.seller-order-details {
+  display: flex;
+  justify-content: center;
+  padding: 50px 0;
+
+  .container {
+    width: 80%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .order-info,
+    .delivery-section,
+    .buyer-feedback-display,
+    .revision-status,
+    .progress-tracker .progress-phase {
+      border: 1px solid lightgray;
+      border-radius: 5px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .progress-tracker {
+      margin-top: 20px;
+
+      .progress-phase {
+        margin-bottom: 20px;
+
+        h3 {
+          font-size: 22px;
+          margin-bottom: 10px;
+        }
+
+        .phase-content {
+          padding-left: 20px;
+          border-left: 3px solid lightgray;
+
+          p {
+            margin-bottom: 10px;
+          }
+
+          .files-list {
+            margin-top: 10px;
+            h4 {
+              font-size: 16px;
+              margin-bottom: 5px;
+            }
+            ul {
+              padding-left: 20px;
+              li {
+                margin-bottom: 5px;
+              }
+            }
+          }
+
+          .delivery-image {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+          }
+
+          .delivery-notes {
+            margin-top: 10px;
+            h4 {
+              font-size: 16px;
+              margin-bottom: 5px;
+            }
+            p {
+              font-style: italic;
+            }
+          }
+
+          .requirements-text {
+            margin-top: 10px;
+            h4 {
+              font-size: 16px;
+              margin-bottom: 5px;
+            }
+          }
+        }
+
+        &.requirements {
+          background-color: #f0f8ff;
+          border-color: #cce5ff;
+          h3 {
+            color: #004085;
+          }
+          .phase-content {
+            border-left-color: #007bff;
+          }
+        }
+
+        &.in-progress {
+          background-color: #fff3cd;
+          border-color: #ffeeba;
+          h3 {
+            color: #856404;
+          }
+          .phase-content {
+            border-left-color: #ffc107;
+          }
+        }
+
+        &.delivered {
+          background-color: #d4edda;
+          border-color: #c3e6cb;
+          h3 {
+            color: #155724;
+          }
+          .phase-content {
+            border-left-color: #28a745;
+          }
+        }
+      }
+    }
+
+    .buyer-feedback-display {
+      h3 {
+        color: #1dbf73;
+        margin-bottom: 15px;
+      }
+
+      .rating-display,
+      .review-display {
+        padding: 10px;
+        background-color: #f0fff4;
+        border-left: 4px solid #1dbf73;
+        border-radius: 4px;
+        margin-bottom: 10px;
+      }
+    }
+
+    .revision-status {
+        background-color: #fff3cd; /* Light yellow background */
+        border-color: #ffeeba; /* Slightly darker yellow border */
+
+        h3 {
+            color: #856404; /* Darker yellow text */
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #666;
+        }
+
+        .revision-details-display {
+            padding: 10px;
+            background-color: #fcf8e3; /* Lighter yellow for details box */
+            border-left: 4px solid #ffc107; /* Orange-yellow left border */
+            border-radius: 4px;
+            margin-top: 10px;
+
+            strong {
+                color: #856404;
+            }
+        }
+    }
+
+    .order-info,
+    .delivery-section {
+      h3 {
+        font-size: 20px;
+        margin-bottom: 10px;
+      }
+
+      p {
+        font-size: 16px;
+        color: #555;
+        line-height: 1.5;
+      }
+
+      .requirements-display {
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 1px solid lightgray;
+
+        h4 {
+          font-size: 18px;
+          margin-bottom: 10px;
+        }
+
+        ul {
+          padding-left: 20px;
+
+          li {
+            margin-bottom: 5px;
+          }
+        }
+      }
+
+      .delivery-upload-form { /* Styling for the delivery form */
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+
+        textarea {
+          padding: 10px;
+          border: 1px solid lightgray;
+          border-radius: 5px;
+          resize: vertical;
+          min-height: 100px;
+        }
+
+        input[type="file"] {
+          padding: 10px;
+          border: 1px solid lightgray;
+          border-radius: 5px;
+        }
+
+        button {
+          background-color: #1dbf73;
+          color: white;
+          padding: 10px 20px;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 16px;
+
+          &:disabled {
+            background-color: #a6a6a6;
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
+  }
+} 
