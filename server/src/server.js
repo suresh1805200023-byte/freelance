@@ -6,6 +6,8 @@ import compression from "compression";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import bcrypt from "bcrypt";
+import path from "path";
+import { fileURLToPath } from "url";
 
 import connect from "./configs/db.js";
 import { User } from "./models/index.js";
@@ -28,9 +30,16 @@ import {
 } from "./routes/index.js";
 
 const app = express();
+app.set("trust proxy", 1);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // ✅ Dynamic PORT (Render compatible)
 const PORT = process.env.PORT || 5000;
+const allowedOrigins = (process.env.CLIENT_URL || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
 // ✅ Admin Config
 const ADMIN_SEED_EMAIL = "admin@gmail.com";
@@ -85,10 +94,12 @@ app.use(compression());
 // ✅ CORS (use env for frontend URL)
 app.use(
   cors({
-    origin: [
-     
-      process.env.CLIENT_URL,
-    ],
+    origin: (origin, callback) => {
+      // Allow requests without origin (e.g., server-to-server, curl, Postman)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
   })
 );
@@ -110,7 +121,7 @@ app.use("/api/categories", categoryRoute);
 app.use("/api/community", communityRoute);
 
 // ⚠️ Local uploads (not persistent on Render)
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 // ✅ Test routes
 app.get("/", (req, res) => {

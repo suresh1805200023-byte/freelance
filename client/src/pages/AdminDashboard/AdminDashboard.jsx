@@ -412,9 +412,18 @@ const AdminDashboard = () => {
 
   const getImageUrl = (imagePath) => {
     if (!imagePath) return null;
+    const rawPath = String(imagePath).replace(/\\/g, '/');
+
+    // Already absolute URL
+    if (/^https?:\/\//i.test(rawPath)) {
+      return rawPath.replace(/^http:\/\//i, 'https://');
+    }
+
     // Remove the /api prefix from VITE_API_URL for static file serving
-    const baseUrl = import.meta.env.VITE_API_URL.replace('/api', '');
-    return `${baseUrl}${imagePath}`;
+    const apiUrl = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+    const baseUrl = apiUrl.replace(/\/api\/?$/, '');
+    const normalizedPath = rawPath.startsWith('/') ? rawPath : `/${rawPath}`;
+    return `${baseUrl}${normalizedPath}`;
   };
 
   const handleEditCategory = (category) => {

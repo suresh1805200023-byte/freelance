@@ -6,9 +6,18 @@ const Card = (props) => {
 
   const getImageUrl = (imagePath) => {
     if (!imagePath) return null;
-    const apiUrl = import.meta.env.VITE_API_URL || '';
+    const rawPath = String(imagePath).replace(/\\/g, '/');
+
+    // Already an absolute URL (possibly old HTTP URL)
+    if (/^https?:\/\//i.test(rawPath)) {
+      return rawPath.replace(/^http:\/\//i, 'https://');
+    }
+
+    const apiUrl = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
     const baseUrl = apiUrl.replace(/\/api\/?$/, '');
-    return `${baseUrl}${imagePath}`;
+    const normalizedPath = rawPath.startsWith('/') ? rawPath : `/${rawPath}`;
+
+    return `${baseUrl}${normalizedPath}`;
   };
 
   return (

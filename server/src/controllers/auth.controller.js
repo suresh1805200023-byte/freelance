@@ -8,6 +8,14 @@ const saltRounds = 10;
 const ADMIN_EMAIL = 'admin@gmail.com';
 const ADMIN_USERNAME = 'admin123';
 const ADMIN_PASSWORD = '123456';
+const isProduction = process.env.NODE_ENV === "production";
+
+const getCookieOptions = () => ({
+    httpOnly: true,
+    sameSite: isProduction ? "none" : "lax",
+    secure: isProduction,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+});
 
 const authRegister = async (request, response) => {
     const { username, email, phone, password, image, isSeller, description, country, languagesKnown, motherLanguage } = request.body;
@@ -34,12 +42,7 @@ const authRegister = async (request, response) => {
         const token = jwt.sign({ _id: user._id, isSeller: user.isSeller, isAdmin: user.isAdmin }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
         return response
-            .cookie("accessToken", token, {
-                httpOnly: true,
-                sameSite: "Lax", // or "None" if using HTTPS
-                secure: process.env.NODE_ENV === "production",
-                maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-            })
+            .cookie("accessToken", token, getCookieOptions())
             .status(201)
             .send({
                 error: false,
@@ -149,12 +152,7 @@ const authLogin = async (req, res) => {
     const token = jwt.sign({ _id: user._id, isSeller: user.isSeller, isAdmin: user.isAdmin }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
     res
-      .cookie("accessToken", token, {
-        httpOnly: true,
-        sameSite: "Lax", // or "None" if using HTTPS
-        secure: process.env.NODE_ENV === "production",
-        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-      })
+      .cookie("accessToken", token, getCookieOptions())
       .status(200)
       .json({
         error: false,
@@ -176,8 +174,9 @@ const authLogin = async (req, res) => {
 
 const authLogout = async (request, response) => {
     return response.clearCookie('accessToken', {
-        sameSite: 'none',
-        secure: true
+        httpOnly: true,
+        sameSite: isProduction ? 'none' : 'lax',
+        secure: isProduction
     })
     .send({
         error: false,
