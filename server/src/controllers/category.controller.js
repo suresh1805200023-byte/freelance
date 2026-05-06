@@ -15,7 +15,16 @@ const storage = multer.diskStorage({
         cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`);
+        const ext = path.extname(file.originalname) || '';
+        const uploadPath = path.join(__dirname, '../../uploads');
+        const randomPart = () => Math.random().toString(36).slice(2, 6);
+
+        let fileName = `${randomPart()}${ext}`;
+        while (fs.existsSync(path.join(uploadPath, fileName))) {
+            fileName = `${randomPart()}${ext}`;
+        }
+
+        cb(null, fileName);
     }
 });
 

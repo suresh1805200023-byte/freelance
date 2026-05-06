@@ -204,4 +204,3 @@ dist
 # Local Netlify folder
 .netlify
 
-server/uploads/
