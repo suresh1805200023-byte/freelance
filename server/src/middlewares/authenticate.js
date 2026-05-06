@@ -3,13 +3,16 @@ const { CustomException } = require("../utils");
 
 const authenticate = (request, response, next) => {
     const { accessToken } = request.cookies;
+    const authHeader = request.headers.authorization || '';
+    const bearerToken = authHeader.startsWith('Bearer ') ? authHeader.slice(7).trim() : '';
+    const token = accessToken || bearerToken;
 
     try {
-        if (!accessToken) {
+        if (!token) {
             throw CustomException('Access denied!', 401);
         }
 
-        const verification = jwt.verify(accessToken, process.env.JWT_SECRET);
+        const verification = jwt.verify(token, process.env.JWT_SECRET);
         if(verification) {
             request.userID = verification._id;
             request.isSeller = verification.isSeller;

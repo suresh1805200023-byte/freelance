@@ -54,6 +54,7 @@ const Navbar = () => {
       } catch (error) {
         console.log("Auth error:", error?.response?.data?.message || "Authentication failed");
         setUser(null);
+        localStorage.removeItem('accessToken');
         localStorage.removeItem('user');
       } finally {
         setIsLoading(false);
@@ -75,6 +76,7 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       await axiosFetch.post("/auth/logout");
+      localStorage.removeItem('accessToken');
       localStorage.removeItem('user');
       setUser(null);
       navigate("/");

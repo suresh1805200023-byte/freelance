@@ -47,6 +47,7 @@ const authRegister = async (request, response) => {
             .send({
                 error: false,
                 message: 'New user created!',
+                token,
                 user: user // Optionally send back user info, but don't include password
             });
 
@@ -156,6 +157,7 @@ const authLogin = async (req, res) => {
       .status(200)
       .json({
         error: false,
+        token,
         user: {
           _id: user._id,
           username: user.username,

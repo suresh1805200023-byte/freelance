@@ -16,6 +16,10 @@ const AdminLogin = () => {
       console.log("Admin login response data:", res.data);
       // Assuming the backend returns user data with isAdmin flag
       if (res.data.user && res.data.user.isAdmin) {
+        if (res.data.token) {
+          localStorage.setItem('accessToken', res.data.token);
+        }
+        localStorage.setItem('user', JSON.stringify(res.data.user));
         // Redirect to admin dashboard or desired admin page
         toast.success('Admin login successful!');
         navigate('/admin/dashboard'); // Replace with your admin dashboard route
