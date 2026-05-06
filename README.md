@@ -226,4 +226,4 @@ npm run dev
 MERN Stack Developer
 
 GitHub:
-[GitHub Profile]
+[GitHub Profile]https://github.com/suresh1805200023-byte/freelance
