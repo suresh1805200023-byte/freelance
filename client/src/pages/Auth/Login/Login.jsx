@@ -24,6 +24,7 @@ const Login = () => {
 
   const handleFormInput = (event) => {
     const { value, name } = event.target;
+
     setFormInput({
       ...formInput,
       [name]: value
@@ -32,7 +33,9 @@ const Login = () => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+
     const formData = new FormData(event.currentTarget);
+
     const submittedInput = {
       username: (formData.get('username') || '').toString().trim(),
       password: (formData.get('password') || '').toString(),
@@ -46,45 +49,95 @@ const Login = () => {
     }
 
     setLoading(true);
+
     try {
+
       const { data } = await axiosFetch.post('/auth/login', submittedInput);
+
+      console.log("LOGIN RESPONSE:", data);
+
       if (data?.token) {
+
         localStorage.setItem('accessToken', data.token);
+
+        console.log("TOKEN SAVED SUCCESSFULLY");
+
+      } else {
+
+        console.log("TOKEN NOT FOUND IN RESPONSE");
+
       }
+
       localStorage.setItem('user', JSON.stringify(data.user));
+
       setUser(data.user);
+
       toast.success("Welcome back!", {
         duration: 3000,
         icon: "😃"
       });
+
+      console.log("TOKEN FROM LOCAL STORAGE:", localStorage.getItem("accessToken"));
+
       navigate('/');
+
     }
-    catch ({ response: { data } }) {
-      setError(data.message);
-      toast.error(data.message, {
+    catch (error) {
+
+      console.log("LOGIN ERROR:", error);
+
+      const message =
+        error?.response?.data?.message || "Login failed";
+
+      setError(message);
+
+      toast.error(message, {
         duration: 3000,
       });
+
     }
     finally {
+
       setLoading(false);
       setError(null);
+
     }
   }
 
   return (
     <div className='login'>
       <form action="" onSubmit={handleFormSubmit}>
-        <h1>Sign in</h1>
-        <label htmlFor="">Email</label>
-        <input name='username' placeholder='username' autoComplete="off" onChange={handleFormInput} />
 
-        <label htmlFor="">Password</label>
-        <input name='password' type='password' placeholder='password' autoComplete="off" onChange={handleFormInput} />
-        <button disabled={loading} type='submit'>{ loading ? 'Loading' : 'Login' }</button>
+        <h1>Sign in</h1>
+
+        <label>Email</label>
+
+        <input
+          name='username'
+          placeholder='username'
+          autoComplete="off"
+          onChange={handleFormInput}
+        />
+
+        <label>Password</label>
+
+        <input
+          name='password'
+          type='password'
+          placeholder='password'
+          autoComplete="off"
+          onChange={handleFormInput}
+        />
+
+        <button disabled={loading} type='submit'>
+          {loading ? 'Loading...' : 'Login'}
+        </button>
+
         <span>{error && error}</span>
+
       </form>
     </div>
   )
 }
 
-export default Login
+export default Login;

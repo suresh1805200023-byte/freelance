@@ -10,9 +10,13 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import connect from "./configs/db.js";
-import { User } from "./models/index.js";
+import modelsIndex from "./models/index.js";
 
-import {
+import routesIndex from "./routes/index.js";
+
+const { User } = modelsIndex;
+
+const {
   userRoute,
   conversationRoute,
   gigRoute,
@@ -27,7 +31,7 @@ import {
   commissionRoute,
   categoryRoute,
   communityRoute,
-} from "./routes/index.js";
+} = routesIndex;
 
 const app = express();
 app.set("trust proxy", 1);
@@ -36,10 +40,22 @@ const __dirname = path.dirname(__filename);
 
 // ✅ Dynamic PORT (Render compatible)
 const PORT = process.env.PORT || 5000;
-const allowedOrigins = (process.env.CLIENT_URL || "")
+const envAllowedOrigins = (process.env.CLIENT_URL || "")
   .split(",")
   .map((origin) => origin.trim())
   .filter(Boolean);
+const defaultDevOrigins = [
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+];
+const allowedOrigins =
+  envAllowedOrigins.length > 0
+    ? envAllowedOrigins
+    : process.env.NODE_ENV === "production"
+      ? []
+      : defaultDevOrigins;
 
 // ✅ Admin Config
 const ADMIN_SEED_EMAIL = "admin@gmail.com";
@@ -97,6 +113,14 @@ app.use(
     origin: (origin, callback) => {
       // Allow requests without origin (e.g., server-to-server, curl, Postman)
       if (!origin) return callback(null, true);
+      // In local development, if CLIENT_URL is not set, accept any localhost origin.
+      if (
+        process.env.NODE_ENV !== "production" &&
+        envAllowedOrigins.length === 0 &&
+        /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin)
+      ) {
+        return callback(null, true);
+      }
       if (allowedOrigins.includes(origin)) return callback(null, true);
       return callback(new Error("Not allowed by CORS"));
     },
