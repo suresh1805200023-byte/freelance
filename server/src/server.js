@@ -39,6 +39,11 @@ app.set("trust proxy", 1);
 // ✅ PORT
 const PORT = process.env.PORT || 5000;
 
+// ✅ CLIENT URL
+const CLIENT_URL =
+  process.env.CLIENT_URL ||
+  "http://localhost:5173";
+
 // ✅ Admin Config
 const ADMIN_SEED_EMAIL = "admin@gmail.com";
 const ADMIN_SEED_USERNAME = "admin123";
@@ -101,19 +106,22 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(compression());
 
-// ✅ SIMPLE CORS FIX
+// ✅ CORS
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "http://127.0.0.1:5173",
-    ],
+    origin: CLIENT_URL,
     credentials: true,
   })
 );
 
 // ✅ Handle Preflight Requests
-app.options("*", cors());
+app.options(
+  "*",
+  cors({
+    origin: CLIENT_URL,
+    credentials: true,
+  })
+);
 
 // ✅ Routes
 app.use("/api/auth", authRoute);
