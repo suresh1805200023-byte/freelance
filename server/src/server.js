@@ -1,18 +1,17 @@
-import dotenv from "dotenv";
+const dotenv = require("dotenv");
 dotenv.config();
 
-import express from "express";
-import compression from "compression";
-import cors from "cors";
-import cookieParser from "cookie-parser";
-import bcrypt from "bcrypt";
-import path from "path";
-import { fileURLToPath } from "url";
+const express = require("express");
+const compression = require("compression");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const bcrypt = require("bcrypt");
+const path = require("path");
 
-import connect from "./configs/db.js";
-import modelsIndex from "./models/index.js";
+const connect = require("./configs/db");
 
-import routesIndex from "./routes/index.js";
+const modelsIndex = require("./models");
+const routesIndex = require("./routes");
 
 const { User } = modelsIndex;
 
@@ -34,43 +33,36 @@ const {
 } = routesIndex;
 
 const app = express();
-app.set("trust proxy", 1);
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
-// ✅ Dynamic PORT (Render compatible)
+app.set("trust proxy", 1);
+
+// ✅ PORT
 const PORT = process.env.PORT || 5000;
-const envAllowedOrigins = (process.env.CLIENT_URL || "")
-  .split(",")
-  .map((origin) => origin.trim())
-  .filter(Boolean);
-const defaultDevOrigins = [
-  "http://localhost:5173",
-  "http://127.0.0.1:5173",
-  "http://localhost:3000",
-  "http://127.0.0.1:3000",
-];
-const allowedOrigins =
-  envAllowedOrigins.length > 0
-    ? envAllowedOrigins
-    : process.env.NODE_ENV === "production"
-      ? []
-      : defaultDevOrigins;
 
 // ✅ Admin Config
 const ADMIN_SEED_EMAIL = "admin@gmail.com";
 const ADMIN_SEED_USERNAME = "admin123";
 const ADMIN_SEED_PASSWORD = "123456";
 const SALT_ROUNDS = 10;
+
 console.log("MONGO_URI:", process.env.MONGO_URI);
+
 // ✅ Seed Admin
 const seedAdminUser = async () => {
   try {
-    const passwordHash = bcrypt.hashSync(ADMIN_SEED_PASSWORD, SALT_ROUNDS);
+    const passwordHash = bcrypt.hashSync(
+      ADMIN_SEED_PASSWORD,
+      SALT_ROUNDS
+    );
 
-    let adminUser = await User.findOne({ email: ADMIN_SEED_EMAIL });
+    let adminUser = await User.findOne({
+      email: ADMIN_SEED_EMAIL,
+    });
+
     if (!adminUser) {
-      adminUser = await User.findOne({ username: ADMIN_SEED_USERNAME });
+      adminUser = await User.findOne({
+        username: ADMIN_SEED_USERNAME,
+      });
     }
 
     if (!adminUser) {
@@ -85,6 +77,7 @@ const seedAdminUser = async () => {
         isActive: true,
         country: "India",
       });
+
       console.log(`✅ Admin created: ${ADMIN_SEED_EMAIL}`);
     } else {
       adminUser.username = ADMIN_SEED_USERNAME;
@@ -92,6 +85,7 @@ const seedAdminUser = async () => {
       adminUser.password = passwordHash;
       adminUser.isAdmin = true;
       adminUser.isActive = true;
+
       await adminUser.save();
 
       console.log(`✅ Admin verified: ${ADMIN_SEED_EMAIL}`);
@@ -107,26 +101,19 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(compression());
 
-// ✅ CORS (use env for frontend URL)
+// ✅ SIMPLE CORS FIX
 app.use(
   cors({
-    origin: (origin, callback) => {
-      // Allow requests without origin (e.g., server-to-server, curl, Postman)
-      if (!origin) return callback(null, true);
-      // In local development, if CLIENT_URL is not set, accept any localhost origin.
-      if (
-        process.env.NODE_ENV !== "production" &&
-        envAllowedOrigins.length === 0 &&
-        /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin)
-      ) {
-        return callback(null, true);
-      }
-      if (allowedOrigins.includes(origin)) return callback(null, true);
-      return callback(new Error("Not allowed by CORS"));
-    },
+    origin: [
+      "http://localhost:5173",
+      "http://127.0.0.1:5173",
+    ],
     credentials: true,
   })
 );
+
+// ✅ Handle Preflight Requests
+app.options("*", cors());
 
 // ✅ Routes
 app.use("/api/auth", authRoute);
@@ -144,21 +131,41 @@ app.use("/api/commission", commissionRoute);
 app.use("/api/categories", categoryRoute);
 app.use("/api/community", communityRoute);
 
-// ⚠️ Local uploads (not persistent on Render)
-app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+// ✅ Static Uploads
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "../uploads"))
+);
 
-// ✅ Test routes
+// ✅ Test Route
 app.get("/", (req, res) => {
   res.send("✅ API is running...");
 });
 
+// ✅ IP Route
 app.get("/ip", (req, res) => {
-  const list = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+  const list =
+    req.headers["x-forwarded-for"] ||
+    req.socket.remoteAddress;
+
   const ips = list.split(",");
-  res.send({ ip: ips[0] });
+
+  res.send({
+    ip: ips[0],
+  });
 });
 
-// ✅ Start server
+// ✅ Error Middleware
+app.use((err, req, res, next) => {
+  console.log("SERVER ERROR:", err);
+
+  res.status(500).json({
+    success: false,
+    message: err.message || "Internal Server Error",
+  });
+});
+
+// ✅ Start Server
 app.listen(PORT, async () => {
   try {
     await connect();
