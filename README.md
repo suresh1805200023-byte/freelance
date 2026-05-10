@@ -227,3 +227,6 @@ MERN Stack Developer
 
 GitHub:
 [GitHub Profile]https://github.com/suresh1805200023-byte/freelance
+
+Live link on render:
+https://freelance-website-mern-stack-1.onrender.com/
