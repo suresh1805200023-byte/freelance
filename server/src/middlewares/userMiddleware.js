@@ -1,67 +1,47 @@
-const jwt = require('jsonwebtoken');
-const { CustomException } = require('../utils');
-const { authLogout } = require('../controllers/auth.controller');
+const jwt = require("jsonwebtoken");
 
-const userMiddleware = (request, response, next) => {
-    const authHeader = request.headers.authorization || '';
+const userMiddleware = (req, res, next) => {
+  try {
+    // Get token from cookie or Authorization header
+    const authHeader = req.headers.authorization;
 
-    const bearerToken = authHeader.startsWith('Bearer ')
-        ? authHeader.slice(7).trim()
-        : '';
+    let token = null;
 
-    const token =
-        request.cookies.accessToken || bearerToken;
-
-    console.log(
-        'userMiddleware - received token:',
-        token ? 'Yes' : 'No'
-    );
-
-    try {
-        if (!token) {
-            throw CustomException(
-                'Unauthorized access!',
-                401
-            );
-        }
-
-        const verification = jwt.verify(
-            token,
-            process.env.JWT_SECRET
-        );
-
-        console.log(
-            'userMiddleware - JWT verification result:',
-            verification
-        );
-
-        if (verification) {
-            request.userID = verification._id;
-            request.isSeller = verification.isSeller;
-            request.isAdmin = verification.isAdmin;
-
-            return next();
-        }
-
-        authLogout(request, response);
-
-        throw CustomException(
-            'Token invalid or expired. Please log in again.',
-            401
-        );
-    } catch (error) {
-        console.error(
-            'Authentication Middleware Error:',
-            error.message
-        );
-
-        return response.status(401).send({
-            error: true,
-            message:
-                error.message ||
-                'Authentication failed.',
-        });
+    if (req.cookies && req.cookies.accessToken) {
+      token = req.cookies.accessToken;
+    } else if (authHeader && authHeader.startsWith("Bearer ")) {
+      token = authHeader.split(" ")[1];
     }
+
+    console.log("Received Token:", token);
+
+    // No token
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: "Access denied. No token provided.",
+      });
+    }
+
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    console.log("Decoded JWT:", decoded);
+
+    // Attach user data
+    req.userID = decoded._id;
+    req.isSeller = decoded.isSeller;
+    req.isAdmin = decoded.isAdmin;
+
+    next();
+  } catch (error) {
+    console.error("JWT Error:", error.message);
+
+    return res.status(401).json({
+      success: false,
+      message: "Invalid or expired token",
+    });
+  }
 };
 
 module.exports = userMiddleware;
